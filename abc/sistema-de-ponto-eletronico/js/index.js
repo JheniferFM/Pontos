@@ -1,14 +1,13 @@
-// Seleciona os elementos do DOM para exibir a data, hora e dia da semana
 const diaSemana = document.getElementById("dia-semana");
 const diaMesAno = document.getElementById("dia-mes-ano");
 const DialogdiaMesAno = document.getElementById("dialog-dia-mes-ano");
 const horaMinSeg = document.getElementById("hora-min-seg");
 const DialogHoraMinSeg = document.getElementById("dialog-hora-min-seg");
 
-// Array com os dias da semana em português
+//dias da semana
 const arrayDayWeek = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
 
-// Seleciona outros elementos do DOM
+
 const selecTiposPontos = document.getElementById("select-tipos-pontos");
 const divAlerta = document.getElementById("div-alerta");
 
@@ -20,17 +19,17 @@ let ProxPonto = {
     "Saída": "Entrada"
 };
 
-// Seleciona o elemento do diálogo de ponto
+
 const dialogPonto = document.getElementById("dialog-ponto");
 
-// Coleta a localização do usuário usando a API de geolocalização
+//localizaçao
 navigator.geolocation.getCurrentPosition((position) => {
     console.log(position);
     console.log(position.coords.latitude);
     console.log(position.coords.longitude);
 });
 
-// Lógica do botão para abrir o diálogo de registro de ponto
+// Lógica do botão para abrir o dialog de registro de ponto
 const btnRegistrarPonto = document.getElementById("btn-registrar-ponto");
 btnRegistrarPonto.addEventListener("click", () => {
    
@@ -43,7 +42,7 @@ btnRegistrarPonto.addEventListener("click", () => {
     dialogPonto.showModal();
 });
 
-// Lógica do botão para fechar o diálogo de registro de ponto
+// Lógica do botão para fechar o dialog de registro de ponto
 const btnDialogFechar = document.getElementById("btn-dialog-fechar");
 btnDialogFechar.addEventListener("click", () => {
     dialogPonto.close();
@@ -87,12 +86,14 @@ btnDialogRegistrarPonto.addEventListener("click", () => {
 
     console.log(ponto);
 
-    // Exibe uma mensagem de alerta informando que o ponto foi registrado
+    // alerta de ponto registrado
     divAlerta.classList.remove("hidden");
     divAlerta.classList.add("show");
+    
 
     const AlertaTexto = document.getElementById("alerta-texto");
     AlertaTexto.textContent = "Ponto Registrado como: " + tipoPonto + " " + hora;
+
 
     // Oculta a mensagem de alerta após 5 segundos
     setTimeout(() => {
@@ -104,19 +105,22 @@ btnDialogRegistrarPonto.addEventListener("click", () => {
     exibirDadosLocalStorage(); // Atualiza a lista de registros
 });
 
+
+
 // Função para obter o dia da semana atual
 function daySemana() {
     const date = new Date();
     return arrayDayWeek[date.getDay()];
 }
 
-// Função para obter a data completa no formato DD/MM/AAAA
+
+// Função para obter a data completa
 function dataCompleta() {
     const date = new Date();
     return String(date.getDate()).padStart(2, '0') + "/" + String((date.getMonth() + 1)).padStart(2, '0') + "/" + date.getFullYear();
 }
 
-// Função para obter a hora completa no formato HH:MM:SS
+// Função para obter a hora completa
 function horaCompleta() {
     const date = new Date();
     return String(date.getHours()).padStart(2, '0') + ":" + String(date.getMinutes()).padStart(2, '0') + ":" + String(date.getSeconds()).padStart(2, '0');
@@ -132,10 +136,16 @@ function atualizaHora() {
 atualizaHora();
 setInterval(atualizaHora, 1000);
 
-// Define o dia da semana e a data atual nos elementos correspondentes
+
+
+
+
+
 diaSemana.textContent = daySemana();
 diaMesAno.textContent = dataCompleta();
 DialogdiaMesAno.textContent = dataCompleta();
+
+
 
 // Função para exibir os dados salvos no localStorage
 function exibirDadosLocalStorage() {
@@ -145,21 +155,64 @@ function exibirDadosLocalStorage() {
     listaRegistros.innerHTML = ""; // Limpa a lista antes de adicionar os itens
 
 
+
+
+
+//exibir os registros
+function exibirRegistros(registros) {
+    const listaRegistros = document.getElementById('lista-registros');
+    listaRegistros.innerHTML = ''; // Limpa a lista antes de adicionar os itens
+    }
+
     registros.forEach((ponto, index) => {
         const item = document.createElement("li");
         item.textContent = `ID: ${ponto.Id}, Data: ${ponto.data}, Hora: ${ponto.hora}, Tipo: ${ponto.tipo}`;
 
-        // Botão de editar
+        // Botão de editar os registros e input de observaçoes
         const btnEditar = document.createElement("button");
+        const inputEditar = document.createElement("input");
+
+        inputEditar.type = "text";
+        inputEditar.placeholder = "Observação";
+
+
         btnEditar.textContent = "Editar";
         btnEditar.addEventListener("click", () => {
             editarRegistro(ponto.Id);
         });
 
+        item.appendChild(inputEditar)
         item.appendChild(btnEditar);
         listaRegistros.appendChild(item);
+
+
+
+
+        //botao de excluir
+        const btnExcluir = document.createElement("button");
+        btnExcluir.textContent = "excluir";
+        btnExcluir.addEventListener("click", () => {
+            alert("voce nao possui permiçao para isso");
+
+        });
+
+        item.appendChild(btnExcluir);
+        listaRegistros.appendChild(item);
+
+
+
+
     });
 }
+
+
+
+
+
+
+
+
+
 
 // Função para editar um registro
 function editarRegistro(id) {
@@ -176,8 +229,13 @@ function editarRegistro(id) {
     }
 }
 
+
+
+
 // Chama a função para exibir os dados ao carregar a página
 document.addEventListener("DOMContentLoaded", exibirDadosLocalStorage);
+
+
 
 
 
@@ -194,7 +252,7 @@ document.getElementById('menu-toggle').addEventListener('click', function() {
 
 
 
-//logia pro botao de mostrar os registros
+//logica pro botao de mostrar os registros
 const dialogRegistros = document.getElementById("dialog-registros-passados");
 const btnFecharRegistros = document.getElementById("fechar-registros");
 
@@ -254,7 +312,7 @@ btnRegistrarAusencia.addEventListener("click", () => {
 
 
 
-   // codagem pra abrir o dialog de justificativa de ausencia
+   //logica pra abrir o dialog de justificativa de ausencia
     const btnFecharAusencia = document.getElementById("fechar-ausencia");
     const btndialogAusencia = document.getElementById("mostrar-ausencia");
         btndialogAusencia.addEventListener ("click", () => {
@@ -263,15 +321,6 @@ btnRegistrarAusencia.addEventListener("click", () => {
       
     
         });
-
-
-
-
-
-
-
-
-
 
 
 
